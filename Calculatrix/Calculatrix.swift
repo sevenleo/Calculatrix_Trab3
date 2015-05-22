@@ -25,44 +25,44 @@ class Calculatrix
     }
     private enum Op: Printable
     {
-        case Operand(Double)
-        case ConstantOperation(String, () -> Double)
-        case UnaryOperation(String, Double -> Double, (Double -> String?)?)
-        case BinaryOperation(String,  Int, Bool, (Double, Double) -> Double, ((Double, Double) -> String?)?)
-        case Variable(String)
+        case Operando(Double)
+        case operacao0(String, () -> Double)
+        case operacao1(String, Double -> Double, (Double -> String?)?)
+        case operacao2(String,  Int, Bool, (Double, Double) -> Double, ((Double, Double) -> String?)?)
+        case Variavel(String)
         
         var description: String {
             get {
                 switch self {
-                case .Operand(let operand):
+                case .Operando(let operand):
                     return "\(operand)"
-                case .UnaryOperation(let symbol, _, _):
+                case .operacao1(let symbol, _, _):
                     return symbol
-                case .BinaryOperation(let symbol, _, _, _, _):
+                case .operacao2(let symbol, _, _, _, _):
                     return symbol
-                case .ConstantOperation(let symbol, _):
+                case .operacao0(let symbol, _):
                     return symbol
-                case .Variable(let symbol):
+                case .Variavel(let symbol):
                     return symbol
                     
                 }
             }
         }
-        var precedence: Int {
+        var prioridade: Int {
             get {
                 switch self {
-                case .BinaryOperation(_, let precedence, _, _, _):
-                    return precedence
+                case .operacao2(_, let prioridade, _, _, _):
+                    return prioridade
                 default:
                     return  Int.max
                 }
             }
         }
-        var commutative: Bool {
+        var troca: Bool {
             get {
                 switch self {
-                case .BinaryOperation(_, _ , let commutative, _, _):
-                    return commutative
+                case .operacao2(_, _ , let troca, _, _):
+                    return troca
                 default:
                     return  true
                 }
@@ -71,7 +71,7 @@ class Calculatrix
     }
     
     private var opStack = [Op]()
-    private var knownOps = [String:Op]()
+    private var operacoes = [String:Op]()
     private var variableValues = [String: Double]()
     
     
@@ -98,21 +98,21 @@ class Calculatrix
     
     init() {
         func learnOp (op: Op) {
-            knownOps[op.description] = op
+            operacoes[op.description] = op
         }
-        learnOp(Op.BinaryOperation("×", 2, true, *, nil ))
-        learnOp(Op.BinaryOperation("÷", 2, false, { $1 / $0 },
+        learnOp(Op.operacao2("×", 2, true, *, nil ))
+        learnOp(Op.operacao2("÷", 2, false, { $1 / $0 },
             { divisor, _ in return divisor == 0.0 ? "Деление на ноль" : nil }))
-        learnOp(Op.BinaryOperation("+", 1, true, +, nil))
-        learnOp(Op.BinaryOperation("−", 1, false, { $1 - $0}, nil))
+        learnOp(Op.operacao2("+", 1, true, +, nil))
+        learnOp(Op.operacao2("−", 1, false, { $1 - $0}, nil))
         
-        learnOp(Op.UnaryOperation("√", sqrt,
+        learnOp(Op.operacao1("√", sqrt,
             { $0 < 0 ? "√ отриц. числа" : nil }))
-        learnOp(Op.UnaryOperation("sin", sin, nil))
-        learnOp(Op.UnaryOperation("cos", cos, nil))
-        learnOp(Op.UnaryOperation("±", { -$0 }, nil))
+        learnOp(Op.operacao1("sin", sin, nil))
+        learnOp(Op.operacao1("cos", cos, nil))
+        learnOp(Op.operacao1("±", { -$0 }, nil))
         
-        learnOp(Op.ConstantOperation("π", { M_PI }))
+        learnOp(Op.operacao0("π", { M_PI }))
     }
     
     
@@ -127,12 +127,12 @@ class Calculatrix
                 
                 var newOpStack = [Op]()
                 for opSymbol in opSymbols {
-                    if let op = knownOps[opSymbol]{
+                    if let op = operacoes[opSymbol]{
                         newOpStack.append(op)
                     } else if let operand = formatter.numberFromString(opSymbol)?.doubleValue {
-                        newOpStack.append(.Operand(operand))
+                        newOpStack.append(.Operando(operand))
                     } else {
-                        newOpStack.append(.Variable(opSymbol))
+                        newOpStack.append(.Variavel(opSymbol))
                     }
                 }
                 opStack = newOpStack
@@ -168,38 +168,38 @@ class Calculatrix
         }
     }
     
-    private func description(ops: [Op]) -> (result: String, remainingOps: [Op], precedence: Int) {
+    private func description(ops: [Op]) -> (result: String, remainingOps: [Op], prioridade: Int) {
         if !ops.isEmpty {
             var remainingOps = ops
             let op = remainingOps.removeLast()
             switch op {
                 
-            case .Operand(let operand):
-                return (formatter.stringFromNumber(operand) ?? "", remainingOps, op.precedence)
+            case .Operando(let operand):
+                return (formatter.stringFromNumber(operand) ?? "", remainingOps, op.prioridade)
                 
-            case .ConstantOperation(let symbol, _):
-                return (symbol, remainingOps, op.precedence)
+            case .operacao0(let symbol, _):
+                return (symbol, remainingOps, op.prioridade)
                 
-            case .UnaryOperation(let symbol, _, _):
+            case .operacao1(let symbol, _, _):
                 let  (operand, remainingOps, precedenceOperand) = description(remainingOps)
-                return ("\(symbol)(\(operand))", remainingOps, op.precedence)
+                return ("\(symbol)(\(operand))", remainingOps, op.prioridade)
                 
-            case .BinaryOperation(let symbol, _, _, _, _):
+            case .operacao2(let symbol, _, _, _, _):
                 var (operand1, remainingOps, precedenceOperand1) = description(remainingOps)
-                if op.precedence > precedenceOperand1
-                    || (op.precedence == precedenceOperand1 && !op.commutative )
+                if op.prioridade > precedenceOperand1
+                    || (op.prioridade == precedenceOperand1 && !op.troca )
                 {
                     operand1 = "(\(operand1))"
                 }
                 var (operand2, remainingOpsOperand2, precedenceOperand2) = description(remainingOps)
-                if op.precedence > precedenceOperand2
+                if op.prioridade > precedenceOperand2
                 {
                     operand2 = "(\(operand2))"
                 }
-                return ("\(operand2) \(symbol) \(operand1)", remainingOpsOperand2, op.precedence)
+                return ("\(operand2) \(symbol) \(operand1)", remainingOpsOperand2, op.prioridade)
                 
-            case .Variable(let symbol):
-                return (symbol, remainingOps, op.precedence)
+            case .Variavel(let symbol):
+                return (symbol, remainingOps, op.prioridade)
             }
         }
         return ("?", ops, Int.max)
@@ -210,18 +210,18 @@ class Calculatrix
             var remainingOps = ops
             let op = remainingOps.removeLast()
             switch op {
-            case .Operand(let operand):
+            case .Operando(let operand):
                 return (operand, remainingOps)
                 
-            case .ConstantOperation(_, let operation):
+            case .operacao0(_, let operation):
                 return (operation(), remainingOps)
                 
-            case .UnaryOperation(_, let operation, let errorTest):
+            case .operacao1(_, let operation, let errorTest):
                 let operandEvaluation = evaluate(remainingOps)
                 if let operand = operandEvaluation.result {
                     return (operation(operand), operandEvaluation.remainingOps)
                 }
-            case .BinaryOperation(_, _, _, let operation, let errorTest):
+            case .operacao2(_, _, _, let operation, let errorTest):
                 let op1Evaluation = evaluate(remainingOps)
                 if let operand1 = op1Evaluation.result {
                     let op2Evaluation = evaluate(op1Evaluation.remainingOps)
@@ -229,7 +229,7 @@ class Calculatrix
                         return (operation(operand1, operand2), op2Evaluation.remainingOps)
                     }
                 }
-            case .Variable(let symbol):
+            case .Variavel(let symbol):
                 return (variableValues[symbol], remainingOps)
             }
         }
@@ -242,19 +242,19 @@ class Calculatrix
             var remainingOps = ops
             let op = remainingOps.removeLast()
             switch op {
-            case .Operand(let operand):
+            case .Operando(let operand):
                 return (.Value(operand), remainingOps)
                 
-            case .Variable(let variable):
-                if let varValue = variableValues[variable] {
+            case .Variavel(let variavel):
+                if let varValue = variableValues[variavel] {
                     return (.Value(varValue), remainingOps)
                 }
-                return (.Error("\(variable) не установлена"), remainingOps)
+                return (.Error("\(variavel) не установлена"), remainingOps)
                 
-            case .ConstantOperation(_, let operation):
+            case .operacao0(_, let operation):
                 return (Result.Value(operation()), remainingOps)
                 
-            case .UnaryOperation(_, let operation, let errorTest):
+            case .operacao1(_, let operation, let errorTest):
                 let operandEvaluation = evaluateResult(remainingOps)
                 switch operandEvaluation.result {
                 case .Value(let operand):
@@ -266,7 +266,7 @@ class Calculatrix
                 case .Error(let errMessage):
                     return (.Error(errMessage), remainingOps)
                 }
-            case .BinaryOperation(_, _, _, let operation, let errorTest):
+            case .operacao2(_, _, _, let operation, let errorTest):
                 let op1Evaluation = evaluateResult(remainingOps)
                 switch op1Evaluation.result {
                 case .Value(let operand1):
@@ -304,17 +304,17 @@ class Calculatrix
     }
     
     func pushOperand(operand: Double) -> Double? {
-        opStack.append(Op.Operand(operand))
+        opStack.append(Op.Operando(operand))
         return evaluate()
     }
     
     func pushOperand(symbol: String) -> Double? {
-        opStack.append(Op.Variable(symbol))
+        opStack.append(Op.Variavel(symbol))
         return evaluate()
     }
     
     func performOperation(symbol: String) -> Double? {
-        if let operation = knownOps[symbol] {
+        if let operation = operacoes[symbol] {
             opStack.append(operation)
         }
         return evaluate()
