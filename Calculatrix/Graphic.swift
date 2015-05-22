@@ -2,7 +2,7 @@
 //  Graphic.swift
 //  Calculatrix
 //
-//  Created by Leo Neves on 5/21/15.
+//  Created by Leo Neves on 5/19/15.
 //  Copyright (c) 2015 Leo Neves. All rights reserved.
 //
 import UIKit

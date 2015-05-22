@@ -2,7 +2,7 @@
 //  GraphicControl.swift
 //  Calculatrix
 //
-//  Created by Leo Neves on 5/21/15.
+//  Created by Leo Neves on 5/19/15.
 //  Copyright (c) 2015 Leo Neves. All rights reserved.
 //
 import UIKit
@@ -40,7 +40,6 @@ class GraphicControl: UIViewController, GraphViewDataSource {
         title = brain.description != "?" ? brain.description : "График"
     }
     
-    // dataSource метод протокола GraphViewDataSource
     func y(x: CGFloat) -> CGFloat? {
         brain.setVariable("M", value: Double (x))
         if let y = brain.evaluate() {
@@ -49,10 +48,6 @@ class GraphicControl: UIViewController, GraphViewDataSource {
         return nil
         
     }
-    /*
-    func y(x: CGFloat) -> CGFloat? {
-    return cos (1.0/x ) * x
-    }
-    */
+
 }
 

@@ -2,7 +2,7 @@
 //  Cartesiano.swift
 //  Calculatrix
 //
-//  Created by Leo Neves on 5/21/15.
+//  Created by Leo Neves on 5/19/15.
 //  Copyright (c) 2015 Leo Neves. All rights reserved.
 //
 import UIKit
@@ -15,8 +15,7 @@ class Cartesiano
     
     var color = UIColor.blueColor()
     var minimumPointsPerHashmark: CGFloat = 40
-    var contentScaleFactor: CGFloat = 1 // set this from UIView's contentScaleFactor to position axes with maximum accuracy
-    
+    var contentScaleFactor: CGFloat = 1
     convenience init(color: UIColor, contentScaleFactor: CGFloat) {
         self.init()
         self.color = color
@@ -32,14 +31,7 @@ class Cartesiano
         self.init()
         self.contentScaleFactor = contentScaleFactor
     }
-    
-    // this method is the heart of the Cartesiano
-    // it draws in the current graphic context's coordinate system
-    // therefore origin and bounds must be in the current graphics context's coordinate system
-    // pointsPerUnit is essentially the "scale" of the axes
-    // e.g. if you wanted there to be 100 points along an axis between -1 and 1,
-    //    you'd set pointsPerUnit to 50
-    
+
     func drawAxesInRect(bounds: CGRect, origin: CGPoint, pointsPerUnit: CGFloat)
     {
         CGContextSaveGState(UIGraphicsGetCurrentContext())
@@ -54,14 +46,13 @@ class Cartesiano
         CGContextRestoreGState(UIGraphicsGetCurrentContext())
     }
     
-    // the rest of this class is private
+
     
     private func drawHashmarksInRect(bounds: CGRect, origin: CGPoint, pointsPerUnit: CGFloat)
     {
         if ((origin.x >= bounds.minX) && (origin.x <= bounds.maxX)) || ((origin.y >= bounds.minY) && (origin.y <= bounds.maxY))
         {
-            // figure out how many units each hashmark must represent
-            // to respect both pointsPerUnit and minimumPointsPerHashmark
+
             var unitsPerHashmark = minimumPointsPerHashmark / pointsPerUnit
             if unitsPerHashmark < 1 {
                 unitsPerHashmark = pow(10, ceil(log10(unitsPerHashmark)))
@@ -71,7 +62,7 @@ class Cartesiano
             
             let pointsPerHashmark = pointsPerUnit * unitsPerHashmark
             
-            // figure out which is the closest set of hashmarks (radiating out from the origin) that are in bounds
+           
             var startingHashmarkRadius: CGFloat = 1
             if !CGRectContainsPoint(bounds, origin) {
                 let leftx = max(origin.x - bounds.maxX, 0)
@@ -81,16 +72,14 @@ class Cartesiano
                 startingHashmarkRadius = min(min(leftx, rightx), min(downy, upy)) / pointsPerHashmark + 1
             }
             
-            // now create a bounding box inside whose edges those four hashmarks lie
+            
             let bboxSize = pointsPerHashmark * startingHashmarkRadius * 2
             var bbox = CGRect(center: origin, size: CGSize(width: bboxSize, height: bboxSize))
             
-            // formatter for the hashmark labels
             let formatter = NSNumberFormatter()
             formatter.maximumFractionDigits = Int(round(-log10(Double(unitsPerHashmark))))
             formatter.minimumIntegerDigits = 1
             
-            // radiate the bbox out until the hashmarks are further out than the bounds
             while !CGRectContainsRect(bbox, bounds)
             {
                 let label = formatter.stringFromNumber((origin.x-bbox.minX)/pointsPerUnit)!
@@ -164,10 +153,7 @@ class Cartesiano
         }
     }
     
-    // we want the axes and hashmarks to be exactly on pixel boundaries so they look sharp
-    // setting contentScaleFactor properly will enable us to put things on the closest pixel boundary
-    // if contentScaleFactor is left to its default (1), then things will be on the nearest "point" boundary instead
-    // the lines will still be sharp in that case, but might be a pixel (or more theoretically) off of where they should be
+
     
     private func alignedPoint(#x: CGFloat, y: CGFloat, insideBounds: CGRect? = nil) -> CGPoint?
     {

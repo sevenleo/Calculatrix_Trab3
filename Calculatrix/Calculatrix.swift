@@ -9,8 +9,7 @@ import Foundation
 
 class Calculatrix
 {
-    // enum Resul - либо для значения стэка, либо для сообщения об ошибке
-    // public, так как используется ViewController для получения оценки стэка
+   
     enum Result: Printable {
         case Value(Double)
         case Error(String)
@@ -24,7 +23,6 @@ class Calculatrix
             }
         }
     }
-    // enum Op - для различных операций
     private enum Op: Printable
     {
         case Operand(Double)
@@ -120,7 +118,7 @@ class Calculatrix
     
     typealias PropertyList = AnyObject
     
-    var program:PropertyList { // guaranteed to be a Property List
+    var program:PropertyList {
         get {
             return opStack.map{$0.description}
         }
@@ -238,8 +236,7 @@ class Calculatrix
         return (nil, ops)
     }
     
-    // рекурсивная вспомогательная функция для public evaluateAndReportErrors метода ниже
-    private func evaluateResult(ops: [Op]) -> (result: Result, remainingOps: [Op]) {
+       private func evaluateResult(ops: [Op]) -> (result: Result, remainingOps: [Op]) {
         
         if !ops.isEmpty {
             var remainingOps = ops
@@ -294,14 +291,12 @@ class Calculatrix
     
     func evaluate() -> Double? {
         let (result, remainder) = evaluate(opStack)
-        //let (result, _) = evaluate(opStack)
-        //        println("\(opStack) = \(result) с остатком \(remainder)")
+     
         return result
     }
     
     
-    // public метод, возвращающий оценку стэка, используя Type Result
-    func evaluateAndReportErrors() -> Result {
+     func evaluateAndReportErrors() -> Result {
         if !opStack.isEmpty {
             return evaluateResult(opStack).result
         }
@@ -354,16 +349,10 @@ class CalculatorFormatter: NSNumberFormatter {
         
     }
     
-    // Swift 1.2 or above
+
     static let sharedInstance = CalculatorFormatter()
     
-    // Swift 1.1
-    /*    class var sharedInstance: CalculatorFormatter {
-    struct Static {
-    static let instance = CalculatorFormatter()
-    }
-    return Static.instance
-    }*/
+
     
 }
 
