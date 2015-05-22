@@ -72,28 +72,28 @@ class Calculatrix
     
     private var opStack = [Op]()
     private var operacoes = [String:Op]()
-    private var variableValues = [String: Double]()
+    private var variaveis = [String: Double]()
     
     
-    func getVariable(symbol: String) -> Double? {
-        return variableValues[symbol]
+    func getVariavel(symbol: String) -> Double? {
+        return variaveis[symbol]
     }
     
-    func setVariable(symbol: String, value: Double) {
-        variableValues[symbol] = value
+    func setVariavel(symbol: String, value: Double) {
+        variaveis[symbol] = value
     }
     
-    func clearVariables() {
-        variableValues.removeAll()
+    func clearVariavel() {
+        variaveis.removeAll()
     }
     
-    func clearStack() {
+    func ZeraPilha() {
         opStack.removeAll()
     }
     
     func clearAll() {
-        clearVariables()
-        clearStack()
+        clearVariavel()
+        ZeraPilha()
     }
     
     init() {
@@ -230,7 +230,7 @@ class Calculatrix
                     }
                 }
             case .Variavel(let symbol):
-                return (variableValues[symbol], remainingOps)
+                return (variaveis[symbol], remainingOps)
             }
         }
         return (nil, ops)
@@ -246,7 +246,7 @@ class Calculatrix
                 return (.Value(operand), remainingOps)
                 
             case .Variavel(let variavel):
-                if let varValue = variableValues[variavel] {
+                if let varValue = variaveis[variavel] {
                     return (.Value(varValue), remainingOps)
                 }
                 return (.Error("\(variavel) не установлена"), remainingOps)

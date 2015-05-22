@@ -29,7 +29,7 @@ class GraphicControl: UIViewController, GraphViewDataSource {
     
     typealias PropertyList = AnyObject
     var program: PropertyList? { didSet {
-        brain.setVariable("M", value: 0)
+        brain.setVariavel("M", value: 0)
         brain.program = program!
         updateUI()
         }
@@ -41,7 +41,7 @@ class GraphicControl: UIViewController, GraphViewDataSource {
     }
     
     func y(x: CGFloat) -> CGFloat? {
-        brain.setVariable("M", value: Double (x))
+        brain.setVariavel("M", value: Double (x))
         if let y = brain.evaluate() {
             return CGFloat(y)
         }

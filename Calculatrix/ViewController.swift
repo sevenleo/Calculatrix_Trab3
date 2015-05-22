@@ -89,12 +89,12 @@ class ViewController: UIViewController
         displayResult = brain.evaluateAndReportErrors()
     }
     
-    @IBAction func setVariable(sender: UIButton) {
+    @IBAction func setVariavel(sender: UIButton) {
         userIsInTheMiddleOfTypingANumber = false
         
         let symbol = dropFirst(sender.currentTitle!)
         if let value = displayValue {
-            brain.setVariable(symbol, value: value)
+            brain.setVariavel(symbol, value: value)
             displayResult = brain.evaluateAndReportErrors()
             
         }
