@@ -42,7 +42,7 @@ class GraphicControl: UIViewController, GraphViewDataSource {
     
     func y(x: CGFloat) -> CGFloat? {
         brain.setVariavel("M", value: Double (x))
-        if let y = brain.evaluate() {
+        if let y = brain.calcular() {
             return CGFloat(y)
         }
         return nil

@@ -12,13 +12,13 @@ class Calculatrix
    
     enum Result: Printable {
         case Value(Double)
-        case Error(String)
+        case Erro(String)
         
         var description: String {
             switch self {
             case .Value(let value):
                 return  formatter.stringFromNumber(value) ?? ""
-            case .Error(let errorMessage):
+            case .Erro(let errorMessage):
                 return errorMessage
             }
         }
@@ -97,22 +97,22 @@ class Calculatrix
     }
     
     init() {
-        func learnOp (op: Op) {
+        func adc (op: Op) {
             operacoes[op.description] = op
         }
-        learnOp(Op.operacao2("×", 2, true, *, nil ))
-        learnOp(Op.operacao2("÷", 2, false, { $1 / $0 },
-            { divisor, _ in return divisor == 0.0 ? "Деление на ноль" : nil }))
-        learnOp(Op.operacao2("+", 1, true, +, nil))
-        learnOp(Op.operacao2("−", 1, false, { $1 - $0}, nil))
+        adc(Op.operacao2("×", 2, true, *, nil ))
+        adc(Op.operacao2("÷", 2, false, { $1 / $0 },
+            { divisor, _ in return divisor == 0.0 ? "Divisao por zero" : nil }))
+        adc(Op.operacao2("+", 1, true, +, nil))
+        adc(Op.operacao2("−", 1, false, { $1 - $0}, nil))
         
-        learnOp(Op.operacao1("√", sqrt,
-            { $0 < 0 ? "√ отриц. числа" : nil }))
-        learnOp(Op.operacao1("sin", sin, nil))
-        learnOp(Op.operacao1("cos", cos, nil))
-        learnOp(Op.operacao1("±", { -$0 }, nil))
+        adc(Op.operacao1("√", sqrt,
+            { $0 < 0 ? "√ Raiz negativa" : nil }))
+        adc(Op.operacao1("sin", sin, nil))
+        adc(Op.operacao1("cos", cos, nil))
+        adc(Op.operacao1("±", { -$0 }, nil))
         
-        learnOp(Op.operacao0("π", { M_PI }))
+        adc(Op.operacao0("π", { M_PI }))
     }
     
     
@@ -123,34 +123,34 @@ class Calculatrix
             return opStack.map{$0.description}
         }
         set{
-            if let opSymbols = newValue as? Array<String> {
+            if let opSnomes = newValue as? Array<String> {
                 
-                var newOpStack = [Op]()
-                for opSymbol in opSymbols {
+                var AddPilha = [Op]()
+                for opSymbol in opSnomes {
                     if let op = operacoes[opSymbol]{
-                        newOpStack.append(op)
+                        AddPilha.append(op)
                     } else if let operand = formatter.numberFromString(opSymbol)?.doubleValue {
-                        newOpStack.append(.Operando(operand))
+                        AddPilha.append(.Operando(operand))
                     } else {
-                        newOpStack.append(.Variavel(opSymbol))
+                        AddPilha.append(.Variavel(opSymbol))
                     }
                 }
-                opStack = newOpStack
+                opStack = AddPilha
             }
         }
     }
     
-    var description1: String {
+    var printa: String {
         get {
-            let (result, remainder) = descParts(opStack)
+            let (result, remainder) = printaB(opStack)
             return result ?? ""
         }
     }
     
-    private func descParts(ops: [Op]) -> (result: String, remainingOps: [Op]) {
+    private func printaB(ops: [Op]) -> (result: String, nextOperacao : [Op]) {
         let (result, reminder, _) = description(ops)
         if !reminder.isEmpty {
-            let (current, reminderCurrent) = descParts(reminder)
+            let (current, reminderCurrent) = printaB(reminder)
             return ("\(current), \(result)",reminderCurrent)
         }
         return (result,reminder)
@@ -168,30 +168,30 @@ class Calculatrix
         }
     }
     
-    private func description(ops: [Op]) -> (result: String, remainingOps: [Op], prioridade: Int) {
+    private func description(ops: [Op]) -> (result: String, nextOperacao : [Op], prioridade: Int) {
         if !ops.isEmpty {
-            var remainingOps = ops
-            let op = remainingOps.removeLast()
+            var nextOperacao  = ops
+            let op = nextOperacao .removeLast()
             switch op {
                 
             case .Operando(let operand):
-                return (formatter.stringFromNumber(operand) ?? "", remainingOps, op.prioridade)
+                return (formatter.stringFromNumber(operand) ?? "", nextOperacao , op.prioridade)
                 
             case .operacao0(let symbol, _):
-                return (symbol, remainingOps, op.prioridade)
+                return (symbol, nextOperacao , op.prioridade)
                 
             case .operacao1(let symbol, _, _):
-                let  (operand, remainingOps, precedenceOperand) = description(remainingOps)
-                return ("\(symbol)(\(operand))", remainingOps, op.prioridade)
+                let  (operand, nextOperacao , precedenceOperand) = description(nextOperacao )
+                return ("\(symbol)(\(operand))", nextOperacao , op.prioridade)
                 
             case .operacao2(let symbol, _, _, _, _):
-                var (operand1, remainingOps, precedenceOperand1) = description(remainingOps)
+                var (operand1, nextOperacao , precedenceOperand1) = description(nextOperacao )
                 if op.prioridade > precedenceOperand1
                     || (op.prioridade == precedenceOperand1 && !op.troca )
                 {
                     operand1 = "(\(operand1))"
                 }
-                var (operand2, remainingOpsOperand2, precedenceOperand2) = description(remainingOps)
+                var (operand2, remainingOpsOperand2, precedenceOperand2) = description(nextOperacao )
                 if op.prioridade > precedenceOperand2
                 {
                     operand2 = "(\(operand2))"
@@ -199,136 +199,136 @@ class Calculatrix
                 return ("\(operand2) \(symbol) \(operand1)", remainingOpsOperand2, op.prioridade)
                 
             case .Variavel(let symbol):
-                return (symbol, remainingOps, op.prioridade)
+                return (symbol, nextOperacao , op.prioridade)
             }
         }
         return ("?", ops, Int.max)
     }
     
-    private func evaluate(ops: [Op]) -> (result: Double?, remainingOps: [Op]) {
+    private func calcular(ops: [Op]) -> (result: Double?, nextOperacao : [Op]) {
         if !ops.isEmpty {
-            var remainingOps = ops
-            let op = remainingOps.removeLast()
+            var nextOperacao  = ops
+            let op = nextOperacao .removeLast()
             switch op {
             case .Operando(let operand):
-                return (operand, remainingOps)
+                return (operand, nextOperacao )
                 
             case .operacao0(_, let operation):
-                return (operation(), remainingOps)
+                return (operation(), nextOperacao )
                 
             case .operacao1(_, let operation, let errorTest):
-                let operandEvaluation = evaluate(remainingOps)
+                let operandEvaluation = calcular(nextOperacao )
                 if let operand = operandEvaluation.result {
-                    return (operation(operand), operandEvaluation.remainingOps)
+                    return (operation(operand), operandEvaluation.nextOperacao )
                 }
             case .operacao2(_, _, _, let operation, let errorTest):
-                let op1Evaluation = evaluate(remainingOps)
-                if let operand1 = op1Evaluation.result {
-                    let op2Evaluation = evaluate(op1Evaluation.remainingOps)
-                    if let operand2 = op2Evaluation.result {
-                        return (operation(operand1, operand2), op2Evaluation.remainingOps)
+                let op1faz = calcular(nextOperacao )
+                if let operand1 = op1faz.result {
+                    let op2faz = calcular(op1faz.nextOperacao )
+                    if let operand2 = op2faz.result {
+                        return (operation(operand1, operand2), op2faz.nextOperacao )
                     }
                 }
             case .Variavel(let symbol):
-                return (variaveis[symbol], remainingOps)
+                return (variaveis[symbol], nextOperacao )
             }
         }
         return (nil, ops)
     }
     
-       private func evaluateResult(ops: [Op]) -> (result: Result, remainingOps: [Op]) {
+       private func resultado(ops: [Op]) -> (result: Result, nextOperacao : [Op]) {
         
         if !ops.isEmpty {
-            var remainingOps = ops
-            let op = remainingOps.removeLast()
+            var nextOperacao  = ops
+            let op = nextOperacao .removeLast()
             switch op {
             case .Operando(let operand):
-                return (.Value(operand), remainingOps)
+                return (.Value(operand), nextOperacao )
                 
             case .Variavel(let variavel):
                 if let varValue = variaveis[variavel] {
-                    return (.Value(varValue), remainingOps)
+                    return (.Value(varValue), nextOperacao )
                 }
-                return (.Error("\(variavel) не установлена"), remainingOps)
+                return (.Erro("\(variavel) не установлена"), nextOperacao )
                 
             case .operacao0(_, let operation):
-                return (Result.Value(operation()), remainingOps)
+                return (Result.Value(operation()), nextOperacao )
                 
             case .operacao1(_, let operation, let errorTest):
-                let operandEvaluation = evaluateResult(remainingOps)
+                let operandEvaluation = resultado(nextOperacao )
                 switch operandEvaluation.result {
                 case .Value(let operand):
                     if let errMessage = errorTest?(operand) {
-                        return (.Error(errMessage), remainingOps)
+                        return (.Erro(errMessage), nextOperacao )
                     }
                     return (.Value(operation(operand)),
-                        operandEvaluation.remainingOps)
-                case .Error(let errMessage):
-                    return (.Error(errMessage), remainingOps)
+                        operandEvaluation.nextOperacao )
+                case .Erro(let errMessage):
+                    return (.Erro(errMessage), nextOperacao )
                 }
             case .operacao2(_, _, _, let operation, let errorTest):
-                let op1Evaluation = evaluateResult(remainingOps)
-                switch op1Evaluation.result {
+                let op1faz = resultado(nextOperacao )
+                switch op1faz.result {
                 case .Value(let operand1):
-                    let op2Evaluation = evaluateResult(op1Evaluation.remainingOps)
-                    switch op2Evaluation.result {
+                    let op2faz = resultado(op1faz.nextOperacao )
+                    switch op2faz.result {
                     case .Value(let operand2):
                         if let errMessage = errorTest?(operand1, operand2) {
-                            return (.Error(errMessage), op1Evaluation.remainingOps)
+                            return (.Erro(errMessage), op1faz.nextOperacao )
                         }
                         return (.Value(operation(operand1, operand2)),
-                            op2Evaluation.remainingOps)
-                    case .Error(let errMessage):
-                        return (.Error(errMessage), op1Evaluation.remainingOps)
+                            op2faz.nextOperacao )
+                    case .Erro(let errMessage):
+                        return (.Erro(errMessage), op1faz.nextOperacao )
                     }
-                case .Error(let errMessage):
-                    return (.Error(errMessage), remainingOps)
+                case .Erro(let errMessage):
+                    return (.Erro(errMessage), nextOperacao )
                 }
             }
         }
-        return (.Error("Мало операндов"), ops)
+        return (.Erro("Мало операндов"), ops)
     }
     
-    func evaluate() -> Double? {
-        let (result, remainder) = evaluate(opStack)
+    func calcular() -> Double? {
+        let (result, remainder) = calcular(opStack)
      
         return result
     }
     
     
-     func evaluateAndReportErrors() -> Result {
+     func ResultadoeErros() -> Result {
         if !opStack.isEmpty {
-            return evaluateResult(opStack).result
+            return resultado(opStack).result
         }
         return .Value(0)
     }
     
-    func pushOperand(operand: Double) -> Double? {
+    func pushOperando(operand: Double) -> Double? {
         opStack.append(Op.Operando(operand))
-        return evaluate()
+        return calcular()
     }
     
-    func pushOperand(symbol: String) -> Double? {
+    func pushOperando(symbol: String) -> Double? {
         opStack.append(Op.Variavel(symbol))
-        return evaluate()
+        return calcular()
     }
     
-    func performOperation(symbol: String) -> Double? {
+    func executaOP(symbol: String) -> Double? {
         if let operation = operacoes[symbol] {
             opStack.append(operation)
         }
-        return evaluate()
+        return calcular()
     }
     
-    func popStack() -> Double? {
+    func popPilha() -> Double? {
         if !opStack.isEmpty {
             opStack.removeLast()
         }
-        return evaluate()
+        return calcular()
     }
     
     
-    func displayStack() -> String {
+    func PilhaToString() -> String {
         return opStack.isEmpty ? "" : " ".join(opStack.map{ $0.description })
     }
 }
@@ -344,7 +344,7 @@ class CalculatorFormatter: NSNumberFormatter {
         self.locale = NSLocale.currentLocale()
         self.numberStyle = .DecimalStyle
         self.maximumFractionDigits = 10
-        self.notANumberSymbol = "Error"
+        self.notANumberSymbol = "Erro"
         self.groupingSeparator = " "
         
     }

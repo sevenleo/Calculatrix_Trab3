@@ -35,7 +35,7 @@ class ViewController: UIViewController
             // enum Result
             display.text = displayResult.description
             userIsInTheMiddleOfTypingANumber = false
-            history.text = brain.description1 + "="
+            history.text = brain.printa + "="
         }
     }
     
@@ -76,17 +76,17 @@ class ViewController: UIViewController
             enter()
         }
         if let operation = sender.currentTitle {
-            brain.performOperation(operation)
-            displayResult = brain.evaluateAndReportErrors()
+            brain.executaOP(operation)
+            displayResult = brain.ResultadoeErros()
         }
     }
     
     @IBAction func enter() {
         userIsInTheMiddleOfTypingANumber = false
         if let value = displayValue {
-            brain.pushOperand(value)
+            brain.pushOperando(value)
         }
-        displayResult = brain.evaluateAndReportErrors()
+        displayResult = brain.ResultadoeErros()
     }
     
     @IBAction func setVariavel(sender: UIButton) {
@@ -95,7 +95,7 @@ class ViewController: UIViewController
         let symbol = dropFirst(sender.currentTitle!)
         if let value = displayValue {
             brain.setVariavel(symbol, value: value)
-            displayResult = brain.evaluateAndReportErrors()
+            displayResult = brain.ResultadoeErros()
             
         }
     }
@@ -104,13 +104,13 @@ class ViewController: UIViewController
         if userIsInTheMiddleOfTypingANumber {
             enter()
         }
-        brain.pushOperand(sender.currentTitle!)
-        displayResult = brain.evaluateAndReportErrors()
+        brain.pushOperando(sender.currentTitle!)
+        displayResult = brain.ResultadoeErros()
     }
     
     @IBAction func clearAll(sender: AnyObject) {
         brain.clearAll()
-        displayResult = brain.evaluateAndReportErrors()
+        displayResult = brain.ResultadoeErros()
     }
     
     @IBAction func backSpace(sender: AnyObject) {
@@ -119,11 +119,11 @@ class ViewController: UIViewController
                 display.text = dropLast(display.text!)
             } else {
                 userIsInTheMiddleOfTypingANumber = false
-                displayResult = brain.evaluateAndReportErrors()
+                displayResult = brain.ResultadoeErros()
             }
         } else {
-            brain.popStack()
-            displayResult = brain.evaluateAndReportErrors()
+            brain.popPilha()
+            displayResult = brain.ResultadoeErros()
         }
     }
     

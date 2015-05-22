@@ -13,7 +13,7 @@ class CalculatorFormatter: NSNumberFormatter {
         self.locale = NSLocale.currentLocale()
         self.numberStyle = .DecimalStyle
         self.maximumFractionDigits = 10
-        self.notANumberSymbol = "Error"
+        self.notANumberSymbol = "Erro"
         self.groupingSeparator = " "
         
     }
@@ -33,13 +33,13 @@ class Calculatrix
     
     enum Result: Printable {
         case Value(Double)
-        case Error(String)
+        case Erro(String)
         
         var description: String {
             switch self {
             case .Value(let value):
                 return  CalculatorFormatter.sharedInstance.stringFromNumber(value) ?? ""
-            case .Error(let errorMessage):
+            case .Erro(let errorMessage):
                 return errorMessage
             }
         }
