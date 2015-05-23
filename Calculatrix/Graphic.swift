@@ -25,22 +25,22 @@ class Graphic: UIView {
     var escala: CGFloat = 50.0 { didSet { setNeedsDisplay() } }
     var origem00: CGPoint? { didSet { setNeedsDisplay() }}
     @IBInspectable
-    var lineWidth: CGFloat = 2.0 { didSet { setNeedsDisplay() } }
+    var linhaW: CGFloat = 2.0 { didSet { setNeedsDisplay() } }
     @IBInspectable
     var color: UIColor = UIColor.blackColor() { didSet { setNeedsDisplay() } }
     
     
     override func drawRect(rect: CGRect) {
         origem00 =  origem00 ?? graphCenter
-        plano.contentScaleFactor = contentScaleFactor
+        plano.escalar = contentScaleFactor
         plano.drawAxesInRect(bounds, origem00: origem00!, pontos: escala)
-        drawCurveInRect(bounds, origem00: origem00!, pontos: escala)
+        desenharCurva(bounds, origem00: origem00!, pontos: escala)
     }
     
-    func drawCurveInRect(bounds: CGRect, origem00: CGPoint, pontos: CGFloat){
+    func desenharCurva(bounds: CGRect, origem00: CGPoint, pontos: CGFloat){
         color.set()
-        let path = UIBezierPath()
-        path.lineWidth = lineWidth
+        let base = UIBezierPath()
+        base.lineWidth = linhaW
         var ponto = CGPoint()
         
         var valorinicial = true
@@ -53,16 +53,16 @@ class Graphic: UIView {
                 }
                 ponto.y = origem00.y - y * escala
                 if valorinicial {
-                    path.moveToPoint(ponto)
+                    base.moveToPoint(ponto)
                     valorinicial = false
                 } else {
-                    path.addLineToPoint(ponto)
+                    base.addLineToPoint(ponto)
                 }
             } else {
                 valorinicial = true
             }
         }
-        path.stroke()
+        base.stroke()
     }
     
     func escala(gesto: UIPinchGestureRecognizer) {
