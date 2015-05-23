@@ -146,8 +146,8 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9bV-Zp-HGy">
                                 <rect key="frame" x="472" y="328" width="104" height="83"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
-                                <state key="normal" title="π">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="PI">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -303,13 +303,10 @@
                                 <rect key="frame" x="136" y="509" width="104" height="83"/>
                                 <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
-                                <state key="normal" title="🔙">
+                                <state key="normal" title="CE">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <action selector="backSpace:" destination="G7H-q3-ubT" eventType="touchUpInside" id="knw-gS-TDF"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U0U-oa-Ytq">
                                 <rect key="frame" x="24" y="509" width="104" height="83"/>
@@ -484,7 +481,7 @@
                     <navigationItem key="navigationItem" title="Calculatrix" id="OYx-VF-pCB"/>
                     <connections>
                         <outlet property="display" destination="g62-Zc-Lvf" id="iEY-kH-H6O"/>
-                        <outlet property="history" destination="C9x-ze-UMx" id="IJV-nz-4UZ"/>
+                        <outlet property="displayhistorico" destination="C9x-ze-UMx" id="IJV-nz-4UZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hhV-jx-aS2" sceneMemberID="firstResponder"/>

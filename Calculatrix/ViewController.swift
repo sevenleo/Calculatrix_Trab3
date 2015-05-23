@@ -11,23 +11,23 @@ import UIKit
 class ViewController: UIViewController
 {
     @IBOutlet weak var display: UILabel!
-    @IBOutlet weak var history: UILabel!
+    @IBOutlet weak var displayhistorico: UILabel!
 
     
-    
+    let limite: Int = 38
     var userIsInTheMiddleOfTypingANumber = false
     var calculadora = Calculatrix()
     
     
-    var displayResult: Calculatrix.Result = .Value(0.0) {
+    var displayresultado: Calculatrix.Result = .Value(0.0) {
         didSet {
-            display.text = displayResult.description
+            display.text = displayresultado.description
             userIsInTheMiddleOfTypingANumber = false
-            history.text = calculadora.printa + "="
+            displayhistorico.text = calculadora.printa + "="
         }
     }
     
-    var displayValue: Double? {
+    var Mostra: Double? {
         get {
             if let displayText = display.text {
                 return formatter.numberFromString(displayText)?.doubleValue
@@ -49,7 +49,7 @@ class ViewController: UIViewController
         } else {
             display.text = digit
             userIsInTheMiddleOfTypingANumber = true
-            history.text = calculadora.description != "?" ? calculadora.description : " "
+            displayhistorico.text = calculadora.description != "?" ? calculadora.description : " "
         }
     }
     
@@ -58,27 +58,27 @@ class ViewController: UIViewController
         if userIsInTheMiddleOfTypingANumber {
             enter()
         }
-        if let operation = sender.currentTitle {
-            calculadora.executaOP(operation)
-            displayResult = calculadora.ResultadoeErros()
+        if let operacao = sender.currentTitle {
+            calculadora.executaOP(operacao)
+            displayresultado = calculadora.Resultados()
         }
     }
     
     @IBAction func enter() {
         userIsInTheMiddleOfTypingANumber = false
-        if let value = displayValue {
+        if let value = Mostra {
             calculadora.pushOperando(value)
         }
-        displayResult = calculadora.ResultadoeErros()
+        displayresultado = calculadora.Resultados()
     }
     
     @IBAction func setVariavel(sender: UIButton) {
         userIsInTheMiddleOfTypingANumber = false
         
-        let symbol = dropFirst(sender.currentTitle!)
-        if let value = displayValue {
-            calculadora.setVariavel(symbol, value: value)
-            displayResult = calculadora.ResultadoeErros()
+        let qual = dropFirst(sender.currentTitle!)
+        if let value = Mostra {
+            calculadora.setVariavel(qual, value: value)
+            displayresultado = calculadora.Resultados()
             
         }
     }
@@ -88,40 +88,19 @@ class ViewController: UIViewController
             enter()
         }
         calculadora.pushOperando(sender.currentTitle!)
-        displayResult = calculadora.ResultadoeErros()
+        displayresultado = calculadora.Resultados()
     }
     
     @IBAction func clearAll(sender: AnyObject) {
         calculadora.clearAll()
-        displayResult = calculadora.ResultadoeErros()
+        displayresultado = calculadora.Resultados()
     }
     
-    @IBAction func backSpace(sender: AnyObject) {
-        if userIsInTheMiddleOfTypingANumber {
-            if count(display.text!) > 1 {
-                display.text = dropLast(display.text!)
-            } else {
-                userIsInTheMiddleOfTypingANumber = false
-                displayResult = calculadora.ResultadoeErros()
-            }
-        } else {
-            calculadora.popPilha()
-            displayResult = calculadora.ResultadoeErros()
-        }
+    @IBAction func ClearPilha(sender: AnyObject) {
+        calculadora.ZeraPilha()
+        displayresultado = calculadora.Resultados()
     }
-    
-    @IBAction func plusMinus(sender: UIButton) {
-        if userIsInTheMiddleOfTypingANumber {
-            if (display.text!.rangeOfString("-") != nil) {
-                display.text = dropFirst(display.text!)
-            } else {
-                display.text = "-" + display.text!
-            }
-        } else {
-            operate(sender)
-        }
-    }
-    
+        
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?){
         var destination = segue.destinationViewController as? UIViewController
         if let nc = destination as? UINavigationController {

@@ -37,7 +37,7 @@ class GraphicControl: UIViewController, GraphViewDataSource {
     
     func updateUI() {
         graphView?.setNeedsDisplay()
-        title = calculadora.description != "?" ? calculadora.description : "График"
+        title = calculadora.description != "?" ? calculadora.description : "Plano cartesiano"
     }
     
     func y(x: CGFloat) -> CGFloat? {

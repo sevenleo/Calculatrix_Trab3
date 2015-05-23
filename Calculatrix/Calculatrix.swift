@@ -36,14 +36,14 @@ class Calculatrix
                 switch self {
                 case .Operando(let operand):
                     return "\(operand)"
-                case .operacao1(let symbol, _, _):
-                    return symbol
-                case .operacao2(let symbol, _, _, _, _):
-                    return symbol
-                case .operacao0(let symbol, _):
-                    return symbol
-                case .Variavel(let symbol):
-                    return symbol
+                case .operacao1(let qual, _, _):
+                    return qual
+                case .operacao2(let qual, _, _, _, _):
+                    return qual
+                case .operacao0(let qual, _):
+                    return qual
+                case .Variavel(let qual):
+                    return qual
                     
                 }
             }
@@ -75,12 +75,12 @@ class Calculatrix
     private var variaveis = [String: Double]()
     
     
-    func getVariavel(symbol: String) -> Double? {
-        return variaveis[symbol]
+    func getVariavel(qual: String) -> Double? {
+        return variaveis[qual]
     }
     
-    func setVariavel(symbol: String, value: Double) {
-        variaveis[symbol] = value
+    func setVariavel(qual: String, value: Double) {
+        variaveis[qual] = value
     }
     
     func clearVariavel() {
@@ -106,13 +106,12 @@ class Calculatrix
         adc(Op.operacao2("+", 1, true, +, nil))
         adc(Op.operacao2("−", 1, false, { $1 - $0}, nil))
         
-        adc(Op.operacao1("√", sqrt,
-            { $0 < 0 ? "√ Raiz negativa" : nil }))
-        adc(Op.operacao1("sin", sin, nil))
-        adc(Op.operacao1("cos", cos, nil))
-        adc(Op.operacao1("±", { -$0 }, nil))
-        
-        adc(Op.operacao0("π", { M_PI }))
+        adc(Op.operacao1("SQRT", sqrt,
+            { $0 < 0 ? "Raiz negativa" : nil }))
+        adc(Op.operacao1("SEN", sin, nil))
+        adc(Op.operacao1("COS", cos, nil))
+      
+        adc(Op.operacao0("PI", { M_PI }))
     }
     
     
@@ -177,14 +176,14 @@ class Calculatrix
             case .Operando(let operand):
                 return (formatter.stringFromNumber(operand) ?? "", nextOperacao , op.prioridade)
                 
-            case .operacao0(let symbol, _):
-                return (symbol, nextOperacao , op.prioridade)
+            case .operacao0(let qual, _):
+                return (qual, nextOperacao , op.prioridade)
                 
-            case .operacao1(let symbol, _, _):
+            case .operacao1(let qual, _, _):
                 let  (operand, nextOperacao , precedenceOperand) = description(nextOperacao )
-                return ("\(symbol)(\(operand))", nextOperacao , op.prioridade)
+                return ("\(qual)(\(operand))", nextOperacao , op.prioridade)
                 
-            case .operacao2(let symbol, _, _, _, _):
+            case .operacao2(let qual, _, _, _, _):
                 var (operand1, nextOperacao , precedenceOperand1) = description(nextOperacao )
                 if op.prioridade > precedenceOperand1
                     || (op.prioridade == precedenceOperand1 && !op.troca )
@@ -196,10 +195,10 @@ class Calculatrix
                 {
                     operand2 = "(\(operand2))"
                 }
-                return ("\(operand2) \(symbol) \(operand1)", remainingOpsOperand2, op.prioridade)
+                return ("\(operand2) \(qual) \(operand1)", remainingOpsOperand2, op.prioridade)
                 
-            case .Variavel(let symbol):
-                return (symbol, nextOperacao , op.prioridade)
+            case .Variavel(let qual):
+                return (qual, nextOperacao , op.prioridade)
             }
         }
         return ("?", ops, Int.max)
@@ -213,24 +212,24 @@ class Calculatrix
             case .Operando(let operand):
                 return (operand, nextOperacao )
                 
-            case .operacao0(_, let operation):
-                return (operation(), nextOperacao )
+            case .operacao0(_, let operacao):
+                return (operacao(), nextOperacao )
                 
-            case .operacao1(_, let operation, let errorTest):
+            case .operacao1(_, let operacao, let errorTest):
                 let operandEvaluation = calcular(nextOperacao )
                 if let operand = operandEvaluation.result {
-                    return (operation(operand), operandEvaluation.nextOperacao )
+                    return (operacao(operand), operandEvaluation.nextOperacao )
                 }
-            case .operacao2(_, _, _, let operation, let errorTest):
+            case .operacao2(_, _, _, let operacao, let errorTest):
                 let op1faz = calcular(nextOperacao )
                 if let operand1 = op1faz.result {
                     let op2faz = calcular(op1faz.nextOperacao )
                     if let operand2 = op2faz.result {
-                        return (operation(operand1, operand2), op2faz.nextOperacao )
+                        return (operacao(operand1, operand2), op2faz.nextOperacao )
                     }
                 }
-            case .Variavel(let symbol):
-                return (variaveis[symbol], nextOperacao )
+            case .Variavel(let qual):
+                return (variaveis[qual], nextOperacao )
             }
         }
         return (nil, ops)
@@ -251,22 +250,22 @@ class Calculatrix
                 }
                 return (.Erro("\(variavel) не установлена"), nextOperacao )
                 
-            case .operacao0(_, let operation):
-                return (Result.Value(operation()), nextOperacao )
+            case .operacao0(_, let operacao):
+                return (Result.Value(operacao()), nextOperacao )
                 
-            case .operacao1(_, let operation, let errorTest):
+            case .operacao1(_, let operacao, let errorTest):
                 let operandEvaluation = resultado(nextOperacao )
                 switch operandEvaluation.result {
                 case .Value(let operand):
                     if let errMessage = errorTest?(operand) {
                         return (.Erro(errMessage), nextOperacao )
                     }
-                    return (.Value(operation(operand)),
+                    return (.Value(operacao(operand)),
                         operandEvaluation.nextOperacao )
                 case .Erro(let errMessage):
                     return (.Erro(errMessage), nextOperacao )
                 }
-            case .operacao2(_, _, _, let operation, let errorTest):
+            case .operacao2(_, _, _, let operacao, let errorTest):
                 let op1faz = resultado(nextOperacao )
                 switch op1faz.result {
                 case .Value(let operand1):
@@ -276,7 +275,7 @@ class Calculatrix
                         if let errMessage = errorTest?(operand1, operand2) {
                             return (.Erro(errMessage), op1faz.nextOperacao )
                         }
-                        return (.Value(operation(operand1, operand2)),
+                        return (.Value(operacao(operand1, operand2)),
                             op2faz.nextOperacao )
                     case .Erro(let errMessage):
                         return (.Erro(errMessage), op1faz.nextOperacao )
@@ -296,7 +295,7 @@ class Calculatrix
     }
     
     
-     func ResultadoeErros() -> Result {
+     func Resultados() -> Result {
         if !opStack.isEmpty {
             return resultado(opStack).result
         }
@@ -308,14 +307,14 @@ class Calculatrix
         return calcular()
     }
     
-    func pushOperando(symbol: String) -> Double? {
-        opStack.append(Op.Variavel(symbol))
+    func pushOperando(qual: String) -> Double? {
+        opStack.append(Op.Variavel(qual))
         return calcular()
     }
     
-    func executaOP(symbol: String) -> Double? {
-        if let operation = operacoes[symbol] {
-            opStack.append(operation)
+    func executaOP(qual: String) -> Double? {
+        if let operacao = operacoes[qual] {
+            opStack.append(operacao)
         }
         return calcular()
     }
