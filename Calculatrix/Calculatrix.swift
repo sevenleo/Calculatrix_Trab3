@@ -17,7 +17,7 @@ class Calculatrix
         var description: String {
             switch self {
             case .Value(let value):
-                return  formatter.stringFromNumber(value) ?? ""
+                return  padrao.stringFromNumber(value) ?? ""
             case .Erro(let errorMessage):
                 return errorMessage
             }
@@ -128,7 +128,7 @@ class Calculatrix
                 for opSymbol in opSnomes {
                     if let op = operacoes[opSymbol]{
                         AddPilha.append(op)
-                    } else if let operand = formatter.numberFromString(opSymbol)?.doubleValue {
+                    } else if let operand = padrao.numberFromString(opSymbol)?.doubleValue {
                         AddPilha.append(.Operando(operand))
                     } else {
                         AddPilha.append(.Variavel(opSymbol))
@@ -174,7 +174,7 @@ class Calculatrix
             switch op {
                 
             case .Operando(let operand):
-                return (formatter.stringFromNumber(operand) ?? "", nextOperacao , op.prioridade)
+                return (padrao.stringFromNumber(operand) ?? "", nextOperacao , op.prioridade)
                 
             case .operacao0(let qual, _):
                 return (qual, nextOperacao , op.prioridade)
@@ -248,7 +248,7 @@ class Calculatrix
                 if let varValue = variaveis[variavel] {
                     return (.Value(varValue), nextOperacao )
                 }
-                return (.Erro("\(variavel) не установлена"), nextOperacao )
+                return (.Erro("\(variavel) nao definida"), nextOperacao )
                 
             case .operacao0(_, let operacao):
                 return (Result.Value(operacao()), nextOperacao )
@@ -285,7 +285,7 @@ class Calculatrix
                 }
             }
         }
-        return (.Erro("Мало операндов"), ops)
+        return (.Erro("faltam operandos"), ops)
     }
     
     func calcular() -> Double? {
@@ -355,4 +355,4 @@ class CalculatorFormatter: NSNumberFormatter {
     
 }
 
-let formatter = CalculatorFormatter()
+let padrao = CalculatorFormatter()

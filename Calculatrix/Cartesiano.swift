@@ -10,11 +10,11 @@ import UIKit
 class Cartesiano
 {
     private struct Constants {
-        static let HashmarkSize: CGFloat = 6
+        static let Pontos: CGFloat = 10 //seriam os pontos vistos
     }
     
-    var color = UIColor.blueColor()
-    var minimumPointsPerHashmark: CGFloat = 40
+    var color = UIColor.blackColor()
+    var MinPontos: CGFloat = 30
     var contentScaleFactor: CGFloat = 1
     convenience init(color: UIColor, contentScaleFactor: CGFloat) {
         self.init()
@@ -53,7 +53,7 @@ class Cartesiano
         if ((origin.x >= bounds.minX) && (origin.x <= bounds.maxX)) || ((origin.y >= bounds.minY) && (origin.y <= bounds.maxY))
         {
 
-            var unitsPerHashmark = minimumPointsPerHashmark / pointsPerUnit
+            var unitsPerHashmark = MinPontos / pointsPerUnit
             if unitsPerHashmark < 1 {
                 unitsPerHashmark = pow(10, ceil(log10(unitsPerHashmark)))
             } else {
@@ -76,13 +76,13 @@ class Cartesiano
             let bboxSize = pointsPerHashmark * startingHashmarkRadius * 2
             var bbox = CGRect(center: origin, size: CGSize(width: bboxSize, height: bboxSize))
             
-            let formatter = NSNumberFormatter()
-            formatter.maximumFractionDigits = Int(round(-log10(Double(unitsPerHashmark))))
-            formatter.minimumIntegerDigits = 1
+            let padrao = NSNumberFormatter()
+            padrao.maximumFractionDigits = Int(round(-log10(Double(unitsPerHashmark))))
+            padrao.minimumIntegerDigits = 1
             
             while !CGRectContainsRect(bbox, bounds)
             {
-                let label = formatter.stringFromNumber((origin.x-bbox.minX)/pointsPerUnit)!
+                let label = padrao.stringFromNumber((origin.x-bbox.minX)/pointsPerUnit)!
                 if let leftHashmarkPoint = alignedPoint(x: bbox.minX, y: origin.y, insideBounds:bounds) {
                     drawHashmarkAtLocation(leftHashmarkPoint, .Top("-\(label)"))
                 }
@@ -104,10 +104,10 @@ class Cartesiano
     {
         var dx: CGFloat = 0, dy: CGFloat = 0
         switch text {
-        case .Left: dx = Constants.HashmarkSize / 2
-        case .Right: dx = Constants.HashmarkSize / 2
-        case .Top: dy = Constants.HashmarkSize / 2
-        case .Bottom: dy = Constants.HashmarkSize / 2
+        case .Left: dx = Constants.Pontos / 2
+        case .Right: dx = Constants.Pontos / 2
+        case .Top: dy = Constants.Pontos / 2
+        case .Bottom: dy = Constants.Pontos / 2
         }
         
         let path = UIBezierPath()

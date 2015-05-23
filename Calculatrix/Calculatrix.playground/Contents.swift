@@ -2,7 +2,7 @@
 
 import UIKit
 
-class CalculatorFormatter: NSNumberFormatter {
+class Calculatorpadrao: NSNumberpadrao {
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -17,16 +17,16 @@ class CalculatorFormatter: NSNumberFormatter {
         self.groupingSeparator = " "
         
     }
-    static let sharedInstance = CalculatorFormatter()
+    static let sharedInstance = Calculatorpadrao()
 
 }
 
-println(CalculatorFormatter.sharedInstance)
+println(Calculatorpadrao.sharedInstance)
 
-println(CalculatorFormatter.sharedInstance)
+println(Calculatorpadrao.sharedInstance)
 
-println(CalculatorFormatter.sharedInstance.stringFromNumber(20.00) ?? "")
-println(CalculatorFormatter.sharedInstance.stringFromNumber(55550) ?? "")
+println(Calculatorpadrao.sharedInstance.stringFromNumber(20.00) ?? "")
+println(Calculatorpadrao.sharedInstance.stringFromNumber(55550) ?? "")
 
 class Calculatrix
 {
@@ -38,7 +38,7 @@ class Calculatrix
         var description: String {
             switch self {
             case .Value(let value):
-                return  CalculatorFormatter.sharedInstance.stringFromNumber(value) ?? ""
+                return  Calculatorpadrao.sharedInstance.stringFromNumber(value) ?? ""
             case .Erro(let errorMessage):
                 return errorMessage
             }
@@ -47,8 +47,8 @@ class Calculatrix
 }
 
 
-let formatter = CalculatorFormatter()
-println(formatter)
-println(formatter)
-println(formatter.stringFromNumber(20.00) ?? "")
-println(formatter.stringFromNumber(55550) ?? "")
+let padrao = Calculatorpadrao()
+println(padrao)
+println(padrao)
+println(padrao.stringFromNumber(20.00) ?? "")
+println(padrao.stringFromNumber(55550) ?? "")

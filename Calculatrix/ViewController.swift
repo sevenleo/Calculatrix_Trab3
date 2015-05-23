@@ -30,7 +30,7 @@ class ViewController: UIViewController
     var Mostra: Double? {
         get {
             if let displayText = display.text {
-                return formatter.numberFromString(displayText)?.doubleValue
+                return padrao.numberFromString(displayText)?.doubleValue
             }
             return nil
         }

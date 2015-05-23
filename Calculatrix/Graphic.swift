@@ -13,7 +13,7 @@ protocol GraphViewDataSource: class {
 
 @IBDesignable
 class Graphic: UIView {
-    let axesDrawer = Cartesiano(color: UIColor.blueColor())
+    let axesDrawer = Cartesiano(color: UIColor.blackColor())
     
     private var graphCenter: CGPoint {
         return convertPoint(center, fromView: superview)

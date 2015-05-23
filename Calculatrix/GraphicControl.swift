@@ -17,10 +17,10 @@ class GraphicControl: UIViewController, GraphViewDataSource {
             action: "scale:"))
         graphView.addGestureRecognizer(UIPanGestureRecognizer(target: graphView,
             action: "originMove:"))
-        let tap = UITapGestureRecognizer(target: graphView, action: "origin:")
-        tap.numberOfTapsRequired = 2
-        graphView.addGestureRecognizer(tap)
-        updateUI()
+        let gesto = UITapGestureRecognizer(target: graphView, action: "origin:")
+        gesto.numberOfTapsRequired = 2
+        graphView.addGestureRecognizer(gesto)
+        atualizaGUI()
         }
     }
     
@@ -31,11 +31,11 @@ class GraphicControl: UIViewController, GraphViewDataSource {
     var program: PropertyList? { didSet {
         calculadora.setVariavel("M", value: 0)
         calculadora.program = program!
-        updateUI()
+        atualizaGUI()
         }
     }
     
-    func updateUI() {
+    func atualizaGUI() {
         graphView?.setNeedsDisplay()
         title = calculadora.description != "?" ? calculadora.description : "Plano cartesiano"
     }
