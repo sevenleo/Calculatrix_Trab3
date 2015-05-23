@@ -12,34 +12,21 @@ class ViewController: UIViewController
 {
     @IBOutlet weak var display: UILabel!
     @IBOutlet weak var history: UILabel!
-    @IBOutlet weak var tochka: UIButton!{
-        didSet {
-            tochka.setTitle(decimalSeparator, forState: UIControlState.Normal)
-        }
-    }
+
     
-    let decimalSeparator = formatter.decimalSeparator ?? "."
     
     var userIsInTheMiddleOfTypingANumber = false
     var calculadora = Calculatrix()
     
-    // Свойство, запоминающее результаты оценки стэка,
-    // сделанные в Моделе Calculatrix
-    // Его тип Result определен как перечисление enum
-    // в Моделе Calculatrix
     
     var displayResult: Calculatrix.Result = .Value(0.0) {
-        // Наблюдатель Свойства модифицирует две IBOutlet метки
         didSet {
-            // используется свойство description перечисления
-            // enum Result
             display.text = displayResult.description
             userIsInTheMiddleOfTypingANumber = false
             history.text = calculadora.printa + "="
         }
     }
     
-    // вычисляемое read-only свойство, отображающее UILabel display.text
     var displayValue: Double? {
         get {
             if let displayText = display.text {
@@ -51,17 +38,13 @@ class ViewController: UIViewController
     
     @IBAction func appendDigit(sender: UIButton) {
         let digit = sender.currentTitle!
-        //        println("digit = \(digit)");
         
         if userIsInTheMiddleOfTypingANumber {
             
-            //----- Не пускаем избыточную точку ---------------
-            if (digit == decimalSeparator) && (display.text?.rangeOfString(decimalSeparator) != nil) { return }
-            //----- Уничтожаем лидирующие нули -----------------
+            if (digit == ".") && (display.text?.rangeOfString(".") != nil) { return }
             if (digit == "0") && ((display.text == "0") || (display.text == "-0")){ return }
-            if (digit != decimalSeparator) && ((display.text == "0") || (display.text == "-0"))
+            if (digit != ".") && ((display.text == "0") || (display.text == "-0"))
             { display.text = digit ; return }
-            //--------------------------------------------------
             display.text = display.text! + digit
         } else {
             display.text = digit
