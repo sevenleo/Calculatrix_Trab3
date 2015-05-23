@@ -13,7 +13,7 @@ protocol GraphViewDataSource: class {
 
 @IBDesignable
 class Graphic: UIView {
-    let axesDrawer = Cartesiano(color: UIColor.blackColor())
+    let plano = Cartesiano(color: UIColor.blackColor())
     
     private var graphCenter: CGPoint {
         return convertPoint(center, fromView: superview)
@@ -22,8 +22,8 @@ class Graphic: UIView {
     weak var dataSource: GraphViewDataSource?
     
     @IBInspectable
-    var scale: CGFloat = 50.0 { didSet { setNeedsDisplay() } }
-    var origin: CGPoint? { didSet { setNeedsDisplay() }}
+    var escala: CGFloat = 50.0 { didSet { setNeedsDisplay() } }
+    var origem00: CGPoint? { didSet { setNeedsDisplay() }}
     @IBInspectable
     var lineWidth: CGFloat = 2.0 { didSet { setNeedsDisplay() } }
     @IBInspectable
@@ -31,64 +31,64 @@ class Graphic: UIView {
     
     
     override func drawRect(rect: CGRect) {
-        origin =  origin ?? graphCenter
-        axesDrawer.contentScaleFactor = contentScaleFactor
-        axesDrawer.drawAxesInRect(bounds, origin: origin!, pointsPerUnit: scale)
-        drawCurveInRect(bounds, origin: origin!, pointsPerUnit: scale)
+        origem00 =  origem00 ?? graphCenter
+        plano.contentScaleFactor = contentScaleFactor
+        plano.drawAxesInRect(bounds, origem00: origem00!, pontos: escala)
+        drawCurveInRect(bounds, origem00: origem00!, pontos: escala)
     }
     
-    func drawCurveInRect(bounds: CGRect, origin: CGPoint, pointsPerUnit: CGFloat){
+    func drawCurveInRect(bounds: CGRect, origem00: CGPoint, pontos: CGFloat){
         color.set()
         let path = UIBezierPath()
         path.lineWidth = lineWidth
-        var point = CGPoint()
+        var ponto = CGPoint()
         
-        var firstValue = true
+        var valorinicial = true
         for var i = 0; i <= Int(bounds.size.width * contentScaleFactor); i++ {
-            point.x = CGFloat(i) / contentScaleFactor
-            if let y = dataSource?.y((point.x - origin.x) / scale) {
+            ponto.x = CGFloat(i) / contentScaleFactor
+            if let y = dataSource?.y((ponto.x - origem00.x) / escala) {
                 if !y.isNormal && !y.isZero {
-                    firstValue = true
+                    valorinicial = true
                     continue
                 }
-                point.y = origin.y - y * scale
-                if firstValue {
-                    path.moveToPoint(point)
-                    firstValue = false
+                ponto.y = origem00.y - y * escala
+                if valorinicial {
+                    path.moveToPoint(ponto)
+                    valorinicial = false
                 } else {
-                    path.addLineToPoint(point)
+                    path.addLineToPoint(ponto)
                 }
             } else {
-                firstValue = true
+                valorinicial = true
             }
         }
         path.stroke()
     }
     
-    func scale(gesture: UIPinchGestureRecognizer) {
-        if gesture.state == .Changed {
-            scale *= gesture.scale
-            gesture.scale = 1.0
+    func escala(gesto: UIPinchGestureRecognizer) {
+        if gesto.state == .Changed {
+            escala *= gesto.scale
+            gesto.scale = 1.0
         }
     }
     
-    func originMove(gesture: UIPanGestureRecognizer) {
-        switch gesture.state {
+    func origem00Move(gesto: UIPanGestureRecognizer) {
+        switch gesto.state {
         case .Ended: fallthrough
         case .Changed:
-            let translation = gesture.translationInView(self)
+            let translation = gesto.translationInView(self)
             if translation != CGPointZero {
-                origin?.x += translation.x
-                origin?.y += translation.y
-                gesture.setTranslation(CGPointZero, inView: self)
+                origem00?.x += translation.x
+                origem00?.y += translation.y
+                gesto.setTranslation(CGPointZero, inView: self)
             }
         default: break
         }
     }
     
-    func origin(gesture: UITapGestureRecognizer) {
-        if gesture.state == .Ended {
-            origin = gesture.locationInView(self)
+    func origem00(gesto: UITapGestureRecognizer) {
+        if gesto.state == .Ended {
+            origem00 = gesto.locationInView(self)
         }
     }
     

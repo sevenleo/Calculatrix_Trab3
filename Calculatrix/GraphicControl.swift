@@ -14,10 +14,10 @@ class GraphicControl: UIViewController, GraphViewDataSource {
         graphView.dataSource = self
         
         graphView.addGestureRecognizer(UIPinchGestureRecognizer(target: graphView,
-            action: "scale:"))
+            action: "escala:"))
         graphView.addGestureRecognizer(UIPanGestureRecognizer(target: graphView,
-            action: "originMove:"))
-        let gesto = UITapGestureRecognizer(target: graphView, action: "origin:")
+            action: "origem00Move:"))
+        let gesto = UITapGestureRecognizer(target: graphView, action: "origem00:")
         gesto.numberOfTapsRequired = 2
         graphView.addGestureRecognizer(gesto)
         atualizaGUI()

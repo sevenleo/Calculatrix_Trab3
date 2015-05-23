@@ -32,49 +32,49 @@ class Cartesiano
         self.contentScaleFactor = contentScaleFactor
     }
 
-    func drawAxesInRect(bounds: CGRect, origin: CGPoint, pointsPerUnit: CGFloat)
+    func drawAxesInRect(bounds: CGRect, origem00: CGPoint, pontos: CGFloat)
     {
         CGContextSaveGState(UIGraphicsGetCurrentContext())
         color.set()
         let path = UIBezierPath()
-        path.moveToPoint(CGPoint(x: bounds.minX, y: align(origin.y)))
-        path.addLineToPoint(CGPoint(x: bounds.maxX, y: align(origin.y)))
-        path.moveToPoint(CGPoint(x: align(origin.x), y: bounds.minY))
-        path.addLineToPoint(CGPoint(x: align(origin.x), y: bounds.maxY))
+        path.moveToPoint(CGPoint(x: bounds.minX, y: align(origem00.y)))
+        path.addLineToPoint(CGPoint(x: bounds.maxX, y: align(origem00.y)))
+        path.moveToPoint(CGPoint(x: align(origem00.x), y: bounds.minY))
+        path.addLineToPoint(CGPoint(x: align(origem00.x), y: bounds.maxY))
         path.stroke()
-        drawHashmarksInRect(bounds, origin: origin, pointsPerUnit: abs(pointsPerUnit))
+        drawHashmarksInRect(bounds, origem00: origem00, pontos: abs(pontos))
         CGContextRestoreGState(UIGraphicsGetCurrentContext())
     }
     
 
     
-    private func drawHashmarksInRect(bounds: CGRect, origin: CGPoint, pointsPerUnit: CGFloat)
+    private func drawHashmarksInRect(bounds: CGRect, origem00: CGPoint, pontos: CGFloat)
     {
-        if ((origin.x >= bounds.minX) && (origin.x <= bounds.maxX)) || ((origin.y >= bounds.minY) && (origin.y <= bounds.maxY))
+        if ((origem00.x >= bounds.minX) && (origem00.x <= bounds.maxX)) || ((origem00.y >= bounds.minY) && (origem00.y <= bounds.maxY))
         {
 
-            var unitsPerHashmark = MinPontos / pointsPerUnit
+            var unitsPerHashmark = MinPontos / pontos
             if unitsPerHashmark < 1 {
                 unitsPerHashmark = pow(10, ceil(log10(unitsPerHashmark)))
             } else {
                 unitsPerHashmark = floor(unitsPerHashmark)
             }
             
-            let pointsPerHashmark = pointsPerUnit * unitsPerHashmark
+            let pointsPerHashmark = pontos * unitsPerHashmark
             
            
             var startingHashmarkRadius: CGFloat = 1
-            if !CGRectContainsPoint(bounds, origin) {
-                let leftx = max(origin.x - bounds.maxX, 0)
-                let rightx = max(bounds.minX - origin.x, 0)
-                let downy = max(origin.y - bounds.minY, 0)
-                let upy = max(bounds.maxY - origin.y, 0)
+            if !CGRectContainsPoint(bounds, origem00) {
+                let leftx = max(origem00.x - bounds.maxX, 0)
+                let rightx = max(bounds.minX - origem00.x, 0)
+                let downy = max(origem00.y - bounds.minY, 0)
+                let upy = max(bounds.maxY - origem00.y, 0)
                 startingHashmarkRadius = min(min(leftx, rightx), min(downy, upy)) / pointsPerHashmark + 1
             }
             
             
             let bboxSize = pointsPerHashmark * startingHashmarkRadius * 2
-            var bbox = CGRect(center: origin, size: CGSize(width: bboxSize, height: bboxSize))
+            var bbox = CGRect(center: origem00, size: CGSize(width: bboxSize, height: bboxSize))
             
             let padrao = NSNumberFormatter()
             padrao.maximumFractionDigits = Int(round(-log10(Double(unitsPerHashmark))))
@@ -82,17 +82,17 @@ class Cartesiano
             
             while !CGRectContainsRect(bbox, bounds)
             {
-                let label = padrao.stringFromNumber((origin.x-bbox.minX)/pointsPerUnit)!
-                if let leftHashmarkPoint = alignedPoint(x: bbox.minX, y: origin.y, insideBounds:bounds) {
+                let label = padrao.stringFromNumber((origem00.x-bbox.minX)/pontos)!
+                if let leftHashmarkPoint = alignedPoint(x: bbox.minX, y: origem00.y, insideBounds:bounds) {
                     drawHashmarkAtLocation(leftHashmarkPoint, .Top("-\(label)"))
                 }
-                if let rightHashmarkPoint = alignedPoint(x: bbox.maxX, y: origin.y, insideBounds:bounds) {
+                if let rightHashmarkPoint = alignedPoint(x: bbox.maxX, y: origem00.y, insideBounds:bounds) {
                     drawHashmarkAtLocation(rightHashmarkPoint, .Top(label))
                 }
-                if let topHashmarkPoint = alignedPoint(x: origin.x, y: bbox.minY, insideBounds:bounds) {
+                if let topHashmarkPoint = alignedPoint(x: origem00.x, y: bbox.minY, insideBounds:bounds) {
                     drawHashmarkAtLocation(topHashmarkPoint, .Left(label))
                 }
-                if let bottomHashmarkPoint = alignedPoint(x: origin.x, y: bbox.maxY, insideBounds:bounds) {
+                if let bottomHashmarkPoint = alignedPoint(x: origem00.x, y: bbox.maxY, insideBounds:bounds) {
                     drawHashmarkAtLocation(bottomHashmarkPoint, .Left("-\(label)"))
                 }
                 bbox.inset(dx: -pointsPerHashmark, dy: -pointsPerHashmark)
@@ -157,13 +157,13 @@ class Cartesiano
     
     private func alignedPoint(#x: CGFloat, y: CGFloat, insideBounds: CGRect? = nil) -> CGPoint?
     {
-        let point = CGPoint(x: align(x), y: align(y))
+        let ponto = CGPoint(x: align(x), y: align(y))
         if let permissibleBounds = insideBounds {
-            if (!CGRectContainsPoint(permissibleBounds, point)) {
+            if (!CGRectContainsPoint(permissibleBounds, ponto)) {
                 return nil
             }
         }
-        return point
+        return ponto
     }
     
     private func align(coordinate: CGFloat) -> CGFloat {
