@@ -25,24 +25,24 @@ class GraphicControl: UIViewController, GraphViewDataSource {
     }
     
     
-    private var brain = Calculatrix()
+    private var calculadora = Calculatrix()
     
     typealias PropertyList = AnyObject
     var program: PropertyList? { didSet {
-        brain.setVariavel("M", value: 0)
-        brain.program = program!
+        calculadora.setVariavel("M", value: 0)
+        calculadora.program = program!
         updateUI()
         }
     }
     
     func updateUI() {
         graphView?.setNeedsDisplay()
-        title = brain.description != "?" ? brain.description : "График"
+        title = calculadora.description != "?" ? calculadora.description : "График"
     }
     
     func y(x: CGFloat) -> CGFloat? {
-        brain.setVariavel("M", value: Double (x))
-        if let y = brain.calcular() {
+        calculadora.setVariavel("M", value: Double (x))
+        if let y = calculadora.calcular() {
             return CGFloat(y)
         }
         return nil

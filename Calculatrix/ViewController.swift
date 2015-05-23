@@ -21,7 +21,7 @@ class ViewController: UIViewController
     let decimalSeparator = formatter.decimalSeparator ?? "."
     
     var userIsInTheMiddleOfTypingANumber = false
-    var brain = Calculatrix()
+    var calculadora = Calculatrix()
     
     // Свойство, запоминающее результаты оценки стэка,
     // сделанные в Моделе Calculatrix
@@ -35,7 +35,7 @@ class ViewController: UIViewController
             // enum Result
             display.text = displayResult.description
             userIsInTheMiddleOfTypingANumber = false
-            history.text = brain.printa + "="
+            history.text = calculadora.printa + "="
         }
     }
     
@@ -66,7 +66,7 @@ class ViewController: UIViewController
         } else {
             display.text = digit
             userIsInTheMiddleOfTypingANumber = true
-            history.text = brain.description != "?" ? brain.description : " "
+            history.text = calculadora.description != "?" ? calculadora.description : " "
         }
     }
     
@@ -76,17 +76,17 @@ class ViewController: UIViewController
             enter()
         }
         if let operation = sender.currentTitle {
-            brain.executaOP(operation)
-            displayResult = brain.ResultadoeErros()
+            calculadora.executaOP(operation)
+            displayResult = calculadora.ResultadoeErros()
         }
     }
     
     @IBAction func enter() {
         userIsInTheMiddleOfTypingANumber = false
         if let value = displayValue {
-            brain.pushOperando(value)
+            calculadora.pushOperando(value)
         }
-        displayResult = brain.ResultadoeErros()
+        displayResult = calculadora.ResultadoeErros()
     }
     
     @IBAction func setVariavel(sender: UIButton) {
@@ -94,8 +94,8 @@ class ViewController: UIViewController
         
         let symbol = dropFirst(sender.currentTitle!)
         if let value = displayValue {
-            brain.setVariavel(symbol, value: value)
-            displayResult = brain.ResultadoeErros()
+            calculadora.setVariavel(symbol, value: value)
+            displayResult = calculadora.ResultadoeErros()
             
         }
     }
@@ -104,13 +104,13 @@ class ViewController: UIViewController
         if userIsInTheMiddleOfTypingANumber {
             enter()
         }
-        brain.pushOperando(sender.currentTitle!)
-        displayResult = brain.ResultadoeErros()
+        calculadora.pushOperando(sender.currentTitle!)
+        displayResult = calculadora.ResultadoeErros()
     }
     
     @IBAction func clearAll(sender: AnyObject) {
-        brain.clearAll()
-        displayResult = brain.ResultadoeErros()
+        calculadora.clearAll()
+        displayResult = calculadora.ResultadoeErros()
     }
     
     @IBAction func backSpace(sender: AnyObject) {
@@ -119,11 +119,11 @@ class ViewController: UIViewController
                 display.text = dropLast(display.text!)
             } else {
                 userIsInTheMiddleOfTypingANumber = false
-                displayResult = brain.ResultadoeErros()
+                displayResult = calculadora.ResultadoeErros()
             }
         } else {
-            brain.popPilha()
-            displayResult = brain.ResultadoeErros()
+            calculadora.popPilha()
+            displayResult = calculadora.ResultadoeErros()
         }
     }
     
@@ -148,7 +148,7 @@ class ViewController: UIViewController
             if let identifier = segue.identifier {
                 switch identifier {
                 case "Show Graph":
-                    gvc.program = brain.program
+                    gvc.program = calculadora.program
                 default:
                     break
                 }
