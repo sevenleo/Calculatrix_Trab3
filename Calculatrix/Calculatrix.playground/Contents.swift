@@ -2,7 +2,7 @@
 
 import UIKit
 
-class Calculatorpadrao: NSNumberpadrao {
+class CalculadoraPadrao: NSNumberpadrao {
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -17,28 +17,28 @@ class Calculatorpadrao: NSNumberpadrao {
         self.groupingSeparator = " "
         
     }
-    static let sharedInstance = Calculatorpadrao()
+    static let sharedInstance = CalculadoraPadrao()
 
 }
 
-println(Calculatorpadrao.sharedInstance)
+println(CalculadoraPadrao.sharedInstance)
 
-println(Calculatorpadrao.sharedInstance)
+println(CalculadoraPadrao.sharedInstance)
 
-println(Calculatorpadrao.sharedInstance.stringFromNumber(20.00) ?? "")
-println(Calculatorpadrao.sharedInstance.stringFromNumber(55550) ?? "")
+println(CalculadoraPadrao.sharedInstance.stringFromNumber(20.00) ?? "")
+println(CalculadoraPadrao.sharedInstance.stringFromNumber(55550) ?? "")
 
 class Calculatrix
 {
     
-    enum Result: Printable {
+    enum Resposta: Printable {
         case Value(Double)
         case Erro(String)
         
         var description: String {
             switch self {
             case .Value(let value):
-                return  Calculatorpadrao.sharedInstance.stringFromNumber(value) ?? ""
+                return  CalculadoraPadrao.sharedInstance.stringFromNumber(value) ?? ""
             case .Erro(let errorMessage):
                 return errorMessage
             }
@@ -47,7 +47,7 @@ class Calculatrix
 }
 
 
-let padrao = Calculatorpadrao()
+let padrao = CalculadoraPadrao()
 println(padrao)
 println(padrao)
 println(padrao.stringFromNumber(20.00) ?? "")

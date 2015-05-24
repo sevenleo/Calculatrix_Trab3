@@ -19,7 +19,7 @@ class ViewController: UIViewController
     var calculadora = Calculatrix()
     
     
-    var displayresultado: Calculatrix.Result = .Value(0.0) {
+    var displayresultado: Calculatrix.Resposta = .Value(0.0) {
         didSet {
             display.text = displayresultado.description
             userIsInTheMiddleOfTypingANumber = false

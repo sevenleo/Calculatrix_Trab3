@@ -10,7 +10,7 @@ import Foundation
 class Calculatrix
 {
    
-    enum Result: Printable {
+    enum Resposta: Printable {
         case Value(Double)
         case Erro(String)
         
@@ -235,7 +235,7 @@ class Calculatrix
         return (nil, ops)
     }
     
-       private func resultado(ops: [Op]) -> (result: Result, nextOperacao : [Op]) {
+       private func resultado(ops: [Op]) -> (result: Resposta, nextOperacao : [Op]) {
         
         if !ops.isEmpty {
             var nextOperacao  = ops
@@ -251,7 +251,7 @@ class Calculatrix
                 return (.Erro("\(variavel) nao definida"), nextOperacao )
                 
             case .operacao0(_, let operacao):
-                return (Result.Value(operacao()), nextOperacao )
+                return (Resposta.Value(operacao()), nextOperacao )
                 
             case .operacao1(_, let operacao, let errorTest):
                 let operandEvaluation = resultado(nextOperacao )
@@ -295,7 +295,7 @@ class Calculatrix
     }
     
     
-     func Resultados() -> Result {
+     func Resultados() -> Resposta {
         if !opStack.isEmpty {
             return resultado(opStack).result
         }
