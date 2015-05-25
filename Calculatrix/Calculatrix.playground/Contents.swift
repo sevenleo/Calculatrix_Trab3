@@ -1,5 +1,5 @@
 //: Playground - noun: a place where people can play
-
+/*
 import UIKit
 
 class CalculadoraPadrao: NSNumberpadrao {
@@ -51,4 +51,4 @@ let padrao = CalculadoraPadrao()
 println(padrao)
 println(padrao)
 println(padrao.stringFromNumber(20.00) ?? "")
-println(padrao.stringFromNumber(55550) ?? "")
+println(padrao.stringFromNumber(55550) ?? "")*/
