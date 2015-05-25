@@ -65,14 +65,8 @@ class Graphic: UIView {
         base.stroke()
     }
     
-    func escala(gesto: UIPinchGestureRecognizer) {
-        if gesto.state == .Changed {
-            escala *= gesto.scale
-            gesto.scale = 1.0
-        }
-    }
     
-    func origem00Move(gesto: UIPanGestureRecognizer) {
+    func Mover(gesto: UIPanGestureRecognizer) {
         switch gesto.state {
         case .Ended: fallthrough
         case .Changed:
@@ -86,7 +80,7 @@ class Graphic: UIView {
         }
     }
     
-    func origem00(gesto: UITapGestureRecognizer) {
+    func Clique(gesto: UITapGestureRecognizer) {
         if gesto.state == .Ended {
             origem00 = gesto.locationInView(self)
         }
