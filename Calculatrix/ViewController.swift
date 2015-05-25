@@ -14,7 +14,7 @@ class ViewController: UIViewController
     @IBOutlet weak var displayhistorico: UILabel!
 
     
-    let limite: Int = 38
+    let limitee: Int = 38
     var userIsInTheMiddleOfTypingANumber = false
     var calculadora = Calculatrix()
     

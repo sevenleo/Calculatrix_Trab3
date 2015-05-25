@@ -15,7 +15,7 @@ protocol GraphViewDataSource: class {
 class Graphic: UIView {
     let plano = Cartesiano(color: UIColor.blackColor())
     
-    private var graphCenter: CGPoint {
+    private var centro: CGPoint {
         return convertPoint(center, fromView: superview)
     }
     
@@ -31,9 +31,9 @@ class Graphic: UIView {
     
     
     override func drawRect(rect: CGRect) {
-        origem00 =  origem00 ?? graphCenter
+        origem00 =  origem00 ?? centro
         plano.escalar = contentScaleFactor
-        plano.drawAxesInRect(bounds, origem00: origem00!, pontos: escala)
+        plano.geraGraphico(bounds, origem00: origem00!, pontos: escala)
         desenharCurva(bounds, origem00: origem00!, pontos: escala)
     }
     

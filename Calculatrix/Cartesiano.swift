@@ -16,6 +16,7 @@ class Cartesiano
     var color = UIColor.blackColor()
     var MinPontos: CGFloat = 30
     var escalar: CGFloat = 1
+    
     convenience init(color: UIColor, escalar: CGFloat) {
         self.init()
         self.color = color
@@ -32,75 +33,75 @@ class Cartesiano
         self.escalar = escalar
     }
 
-    func drawAxesInRect(espaco: CGRect, origem00: CGPoint, pontos: CGFloat)
+    func geraGraphico(espaco: CGRect, origem00: CGPoint, pontos: CGFloat)
     {
         CGContextSaveGState(UIGraphicsGetCurrentContext())
         color.set()
         let base = UIBezierPath()
-        base.moveToPoint(CGPoint(x: espaco.minX, y: align(origem00.y)))
-        base.addLineToPoint(CGPoint(x: espaco.maxX, y: align(origem00.y)))
-        base.moveToPoint(CGPoint(x: align(origem00.x), y: espaco.minY))
-        base.addLineToPoint(CGPoint(x: align(origem00.x), y: espaco.maxY))
+        base.moveToPoint(CGPoint(x: espaco.minX, y: alinhar(origem00.y)))
+        base.addLineToPoint(CGPoint(x: espaco.maxX, y: alinhar(origem00.y)))
+        base.moveToPoint(CGPoint(x: alinhar(origem00.x), y: espaco.minY))
+        base.addLineToPoint(CGPoint(x: alinhar(origem00.x), y: espaco.maxY))
         base.stroke()
-        drawHashmarksInRect(espaco, origem00: origem00, pontos: abs(pontos))
+        desenhar(espaco, origem00: origem00, pontos: abs(pontos))
         CGContextRestoreGState(UIGraphicsGetCurrentContext())
     }
     
 
     
-    private func drawHashmarksInRect(espaco: CGRect, origem00: CGPoint, pontos: CGFloat)
+    private func desenhar(espaco: CGRect, origem00: CGPoint, pontos: CGFloat)
     {
         if ((origem00.x >= espaco.minX) && (origem00.x <= espaco.maxX)) || ((origem00.y >= espaco.minY) && (origem00.y <= espaco.maxY))
         {
 
-            var unitsPerHashmark = MinPontos / pontos
-            if unitsPerHashmark < 1 {
-                unitsPerHashmark = pow(10, ceil(log10(unitsPerHashmark)))
+            var unidades = MinPontos / pontos
+            if unidades < 1 {
+                unidades = pow(10, ceil(log10(unidades)))
             } else {
-                unitsPerHashmark = floor(unitsPerHashmark)
+                unidades = floor(unidades)
             }
             
-            let pointsPerHashmark = pontos * unitsPerHashmark
+            let totalPontos = pontos * unidades
             
            
-            var startingHashmarkRadius: CGFloat = 1
+            var raioDeDesenho: CGFloat = 1
             if !CGRectContainsPoint(espaco, origem00) {
                 let leftx = max(origem00.x - espaco.maxX, 0)
                 let rightx = max(espaco.minX - origem00.x, 0)
                 let downy = max(origem00.y - espaco.minY, 0)
                 let upy = max(espaco.maxY - origem00.y, 0)
-                startingHashmarkRadius = min(min(leftx, rightx), min(downy, upy)) / pointsPerHashmark + 1
+                raioDeDesenho = min(min(leftx, rightx), min(downy, upy)) / totalPontos + 1
             }
             
             
-            let bboxSize = pointsPerHashmark * startingHashmarkRadius * 2
-            var bbox = CGRect(center: origem00, size: CGSize(width: bboxSize, height: bboxSize))
+            let Tamanho = totalPontos * raioDeDesenho * 2
+            var espacoInterno = CGRect(center: origem00, size: CGSize(width: Tamanho, height: Tamanho))
             
             let padrao = NSNumberFormatter()
-            padrao.maximumFractionDigits = Int(round(-log10(Double(unitsPerHashmark))))
+            padrao.maximumFractionDigits = Int(round(-log10(Double(unidades))))
             padrao.minimumIntegerDigits = 1
             
-            while !CGRectContainsRect(bbox, espaco)
+            while !CGRectContainsRect(espacoInterno, espaco)
             {
-                let label = padrao.stringFromNumber((origem00.x-bbox.minX)/pontos)!
-                if let leftHashmarkPoint = alignedPoint(x: bbox.minX, y: origem00.y, insideBounds:espaco) {
-                    drawHashmarkAtLocation(leftHashmarkPoint, .Top("-\(label)"))
+                let rotulo = padrao.stringFromNumber((origem00.x-espacoInterno.minX)/pontos)!
+                if let leftlimite = risca(x: espacoInterno.minX, y: origem00.y, insideBounds:espaco) {
+                    Redesenhar(leftlimite, .Top("-\(rotulo)"))
                 }
-                if let rightHashmarkPoint = alignedPoint(x: bbox.maxX, y: origem00.y, insideBounds:espaco) {
-                    drawHashmarkAtLocation(rightHashmarkPoint, .Top(label))
+                if let rightlimite = risca(x: espacoInterno.maxX, y: origem00.y, insideBounds:espaco) {
+                    Redesenhar(rightlimite, .Top(rotulo))
                 }
-                if let topHashmarkPoint = alignedPoint(x: origem00.x, y: bbox.minY, insideBounds:espaco) {
-                    drawHashmarkAtLocation(topHashmarkPoint, .Left(label))
+                if let uplimite = risca(x: origem00.x, y: espacoInterno.minY, insideBounds:espaco) {
+                    Redesenhar(uplimite, .Left(rotulo))
                 }
-                if let bottomHashmarkPoint = alignedPoint(x: origem00.x, y: bbox.maxY, insideBounds:espaco) {
-                    drawHashmarkAtLocation(bottomHashmarkPoint, .Left("-\(label)"))
+                if let downlimite = risca(x: origem00.x, y: espacoInterno.maxY, insideBounds:espaco) {
+                    Redesenhar(downlimite, .Left("-\(rotulo)"))
                 }
-                bbox.inset(dx: -pointsPerHashmark, dy: -pointsPerHashmark)
+                espacoInterno.inset(dx: -totalPontos, dy: -totalPontos)
             }
         }
     }
     
-    private func drawHashmarkAtLocation(location: CGPoint, _ text: AnchoredText)
+    private func Redesenhar(location: CGPoint, _ text: texto)
     {
         var dx: CGFloat = 0, dy: CGFloat = 0
         switch text {
@@ -115,30 +116,30 @@ class Cartesiano
         base.addLineToPoint(CGPoint(x: location.x+dx, y: location.y+dy))
         base.stroke()
         
-        text.drawAnchoredToPoint(location, color: color)
+        text.criartexto(location, color: color)
     }
     
-    private enum AnchoredText
+    private enum texto
     {
         case Left(String)
         case Right(String)
         case Top(String)
         case Bottom(String)
         
-        static let VerticalOffset: CGFloat = 3
-        static let HorizontalOffset: CGFloat = 6
+        static let limitevertical: CGFloat = 3
+        static let limitehorizontal: CGFloat = 6
         
-        func drawAnchoredToPoint(location: CGPoint, color: UIColor) {
+        func criartexto(location: CGPoint, color: UIColor) {
             let attributes = [
                 NSFontAttributeName : UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote),
                 NSForegroundColorAttributeName : color
             ]
             var textRect = CGRect(center: location, size: text.sizeWithAttributes(attributes))
             switch self {
-            case Top: textRect.origin.y += textRect.size.height / 2 + AnchoredText.VerticalOffset
-            case Left: textRect.origin.x += textRect.size.width / 2 + AnchoredText.HorizontalOffset
-            case Bottom: textRect.origin.y -= textRect.size.height / 2 + AnchoredText.VerticalOffset
-            case Right: textRect.origin.x -= textRect.size.width / 2 + AnchoredText.HorizontalOffset
+            case Top: textRect.origin.y += textRect.size.height / 2 + texto.limitevertical
+            case Left: textRect.origin.x += textRect.size.width / 2 + texto.limitehorizontal
+            case Bottom: textRect.origin.y -= textRect.size.height / 2 + texto.limitevertical
+            case Right: textRect.origin.x -= textRect.size.width / 2 + texto.limitehorizontal
             }
             text.drawInRect(textRect, withAttributes: attributes)
         }
@@ -155,9 +156,9 @@ class Cartesiano
     
 
     
-    private func alignedPoint(#x: CGFloat, y: CGFloat, insideBounds: CGRect? = nil) -> CGPoint?
+    private func risca(#x: CGFloat, y: CGFloat, insideBounds: CGRect? = nil) -> CGPoint?
     {
-        let ponto = CGPoint(x: align(x), y: align(y))
+        let ponto = CGPoint(x: alinhar(x), y: alinhar(y))
         if let permissibleBounds = insideBounds {
             if (!CGRectContainsPoint(permissibleBounds, ponto)) {
                 return nil
@@ -166,7 +167,7 @@ class Cartesiano
         return ponto
     }
     
-    private func align(coordinate: CGFloat) -> CGFloat {
+    private func alinhar(coordinate: CGFloat) -> CGFloat {
         return round(coordinate * escalar) / escalar
     }
 }

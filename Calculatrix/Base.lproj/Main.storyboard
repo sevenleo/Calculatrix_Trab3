@@ -17,23 +17,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="g62-Zc-Lvf">
-                                <rect key="frame" x="75" y="103" width="509" height="36"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="39" id="EtY-Ky-jMt"/>
-                                    <constraint firstAttribute="width" constant="505" id="Ldv-et-wYH"/>
-                                    <constraint firstAttribute="height" constant="38" id="wiI-Ne-JHs"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="29"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="EtY-Ky-jMt"/>
-                                        <exclude reference="Ldv-et-wYH"/>
-                                        <exclude reference="wiI-Ne-JHs"/>
-                                    </mask>
-                                </variation>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kSg-LP-JqZ">
                                 <rect key="frame" x="24" y="147" width="104" height="83"/>
                                 <color key="backgroundColor" red="0.039215687662363052" green="0.019607843831181526" blue="0.074509806931018829" alpha="0.070000000000000007" colorSpace="deviceRGB"/>
@@ -329,6 +312,9 @@
                                     <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" cocoaTouchSystemColor="darkTextColor"/>
                                 </state>
+                                <connections>
+                                    <action selector="ClearPilha:" destination="G7H-q3-ubT" eventType="touchUpInside" id="dOp-2O-u0F"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U0U-oa-Ytq">
                                 <rect key="frame" x="24" y="509" width="104" height="83"/>
@@ -369,8 +355,25 @@
                                     </mask>
                                 </variation>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="g62-Zc-Lvf">
+                                <rect key="frame" x="75" y="103" width="509" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="39" id="EtY-Ky-jMt"/>
+                                    <constraint firstAttribute="width" constant="505" id="Ldv-et-wYH"/>
+                                    <constraint firstAttribute="height" constant="38" id="wiI-Ne-JHs"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="29"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="EtY-Ky-jMt"/>
+                                        <exclude reference="Ldv-et-wYH"/>
+                                        <exclude reference="wiI-Ne-JHs"/>
+                                    </mask>
+                                </variation>
+                            </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="g62-Zc-Lvf" firstAttribute="leading" secondItem="C9x-ze-UMx" secondAttribute="leading" id="0Ti-1O-fRR"/>
@@ -581,7 +584,6 @@
                 <splitViewController id="b4A-Xo-X0s" sceneMemberID="viewController">
                     <connections>
                         <segue destination="Idq-kA-fUh" kind="relationship" relationship="masterViewController" id="mnJ-AN-lvp"/>
-                        <segue destination="vyT-f7-G4e" kind="relationship" relationship="detailViewController" id="k8s-a0-jxk"/>
                     </connections>
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XLe-H4-ErN" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -607,7 +609,4 @@
             <point key="canvasLocation" x="628" y="551"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="k8s-a0-jxk"/>
-    </inferredMetricsTieBreakers>
 </document>

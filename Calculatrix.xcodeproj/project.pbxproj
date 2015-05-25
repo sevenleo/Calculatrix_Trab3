@@ -31,8 +31,7 @@
 
 /* Begin PBXFileReference section */
 		B22DD3A21AFD3FD4000B642B /* Calculatrix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Calculatrix.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		CE0B454D1B0EA558002ACC0E /* Cartesiano.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cartesiano.swift; sourceTree = "<group>"; };
-		CE5889FC1B0EA7D700FB1DC4 /* Calculatrix.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Calculatrix.playground; sourceTree = "<group>"; };
+		CE0B454D1B0EA558002ACC0E /* Cartesiano.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Cartesiano.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CE5889FD1B0EA85A00FB1DC4 /* Graphic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Graphic.swift; sourceTree = "<group>"; };
 		CE5889FF1B0EA89600FB1DC4 /* GraphicControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GraphicControl.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CEA0D68D1AD8EBA1005BF06F /* Calculatrix.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Calculatrix.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,7 +93,6 @@
 				CEA0D69B1AD8EBA1005BF06F /* LaunchScreen.xib */,
 				CEA0D6901AD8EBA1005BF06F /* Supporting Files */,
 				CE0B454D1B0EA558002ACC0E /* Cartesiano.swift */,
-				CE5889FC1B0EA7D700FB1DC4 /* Calculatrix.playground */,
 				CE5889FD1B0EA85A00FB1DC4 /* Graphic.swift */,
 				CE5889FF1B0EA89600FB1DC4 /* GraphicControl.swift */,
 			);

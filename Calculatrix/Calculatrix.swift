@@ -5,6 +5,7 @@
 //  Created by Computação Gráfica 2 on 08/05/15.
 //  Copyright (c) 2015 Leo Neves. All rights reserved.
 //
+
 import Foundation
 
 class Calculatrix
@@ -216,9 +217,9 @@ class Calculatrix
                 return (operacao(), nextOperacao )
                 
             case .operacao1(_, let operacao, let errorTest):
-                let operandEvaluation = calcular(nextOperacao )
-                if let operand = operandEvaluation.result {
-                    return (operacao(operand), operandEvaluation.nextOperacao )
+                let resultadoB = calcular(nextOperacao )
+                if let operand = resultadoB.result {
+                    return (operacao(operand), resultadoB.nextOperacao )
                 }
             case .operacao2(_, _, _, let operacao, let errorTest):
                 let op1faz = calcular(nextOperacao )
@@ -254,14 +255,14 @@ class Calculatrix
                 return (Resposta.Value(operacao()), nextOperacao )
                 
             case .operacao1(_, let operacao, let errorTest):
-                let operandEvaluation = resultado(nextOperacao )
-                switch operandEvaluation.result {
+                let resultadoB = resultado(nextOperacao )
+                switch resultadoB.result {
                 case .Value(let operand):
                     if let errMessage = errorTest?(operand) {
                         return (.Erro(errMessage), nextOperacao )
                     }
                     return (.Value(operacao(operand)),
-                        operandEvaluation.nextOperacao )
+                        resultadoB.nextOperacao )
                 case .Erro(let errMessage):
                     return (.Erro(errMessage), nextOperacao )
                 }
@@ -331,6 +332,8 @@ class Calculatrix
         return opStack.isEmpty ? "" : " ".join(opStack.map{ $0.description })
     }
 }
+
+
 
 class CalculatorFormatter: NSNumberFormatter {
     
